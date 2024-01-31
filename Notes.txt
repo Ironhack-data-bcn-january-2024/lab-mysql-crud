@@ -1,0 +1,141 @@
+drop database if exists cardealer;
+CREATE DATABASE IF NOT EXISTS cardealer;
+USE cardealer;
+
+-- | ID | VIN | Manufacturer | Model | Year | Color |
+CREATE TABLE IF NOT EXISTS car(
+    car_ID int primary key,
+	VIN varchar(40) not null,
+	manufacturer varchar(40) not null, 
+	model varchar(40) not null, 
+	year INT not null, 
+	color varchar(40)
+    
+);
+
+
+-- 2. **Customers** 
+-- | Customer ID | Name | Phone | Email | Address | City | State/Province | Country | Postal |
+CREATE TABLE IF NOT EXISTS customers(
+	customer_ID int primary key, 
+    customer int,
+	c_name varchar(40) not null,
+	phone_number varchar(20) not null, 
+	email varchar(40), 
+	address varchar(60) not null, 
+	city varchar(40) not null, 
+	state_province varchar(40) not null, 	
+	country varchar(40) not null,
+	zip_postal int not null
+    );
+    
+
+
+-- ID | Staff ID | Name | Store |
+CREATE TABLE IF NOT EXISTS salesperson(
+	salesperson_ID int primary key,
+	staff int, 
+	s_name varchar(40) not null,
+	store varchar (40) not null
+);
+
+
+-- | ID | Invoice Number | Date | Car | Customer | Sales Person |
+CREATE TABLE IF NOT EXISTS invoces(
+	inv_ID int primary key,
+	invoice_number int not null, 
+	date date, 
+	car int, -- recbendo car_ID
+	customers int, -- recbendo customer_ID
+    salesperson int -- recebendo salespersons_id
+);
+
+
+ALTER TABLE invoces
+	ADD FOREIGN KEY (car) 
+REFERENCES car(car_ID)
+ON DELETE SET NULL;
+
+ALTER TABLE invoces
+	ADD FOREIGN KEY (customers) 
+REFERENCES customers(customer_ID)
+ON DELETE SET NULL;
+
+ALTER TABLE invoces
+	ADD FOREIGN KEY (salesperson) 
+REFERENCES salesperson(salesperson_ID)
+ON DELETE SET NULL;
+
+
+
+
+CREATE TABLE IF NOT EXISTS store(
+    car_ID int,
+    customer_ID int,
+    salesperson_ID int, 
+    primary key (car_ID, customer_ID, salesperson_ID),
+    FOREIGN key (car_ID) REFERENCES car(car_ID) ON DELETE CASCADE,
+    FOREIGN key (customer_ID) REFERENCES customers(customer_ID) ON DELETE CASCADE,
+    FOREIGN key (salesperson_ID) REFERENCES salesperson(salesperson_ID) ON DELETE CASCADE
+    );
+    
+-- car    
+-- | ID | VIN | Manufacturer | Model | Year | Color |
+INSERT INTO car values
+
+(0, "3K096I98581DHSNUP", "Volkswagen", "Tiguan", "2019", "Blue"),
+(1, "ZM8G7BEUQZ97IH46V", "Peugeot", "Rifter", "2019", "Red"),
+(2, "RKXVNNIHLVVZOUB4M", "Ford", "Fusion", "2018", "White"),
+(3, "HKNDGS7CU31E9Z7JW", "Toyota", "RAV4", "2018", "Silver"),
+(4, "ACM41UDN3CHU2WVF5", "Volvo", "V60", "2019", "Gray"),
+(5, "DAM41UDN3CHU2WVF6", "Volvo", "V60 Cross Country", "2019", "Gray");
+
+-- customers
+-- | ID | Customer ID | Name | Phone | Email | Address | City | State/Province | Country | Postal |
+INSERT INTO customers values
+
+(0,"10001","Pablo Picasso","+34 636 17 63 82","-","Paseo de la Chopera, 14","Madrid","Madrid","Spain","28045"),
+(1,"20001","Abraham Lincoln","+1 305 907 7086","-","120 SW 8th St","Miami","Florida","United States","33130"),
+(2,"30001","Napoléon Bonaparte","+33 1 79 75 40 00","-","40 Rue du Colisée","Paris","Île-de-France","France","75008");
+
+
+-- salesperson
+-- | ID | Staff ID | Name | Store |
+INSERT INTO salesperson values
+
+(0,"00001","Petey Cruiser","Madrid"),
+(1,"00002","Anna Sthesia","Barcelona"),
+(2,"00003","Paul Molive","Berlin"),
+(3,"00004","Gail Forcewind","Paris"),
+(4,"00005","Paige Turner","Mimia"),
+(5,"00006","Bob Frapples","Mexico City"),
+(6,"00007","Walter Melon","Amsterdam"),
+(7,"00008","Shonda Leer","São Paulo");
+
+
+-- invoces
+-- | ID | Invoice Number | Date | Car | Customer | Sales Person |
+INSERT INTO invoces values
+
+(0,"852399038","2200-08-20","0","1","3"),
+(1,"731166526","3100-12-12","3","0","5"),
+(2,"271135104","2200-01-12","2","2","7");
+
+
+-- bonus
+
+UPDATE customers
+SET email = "ppicasso@gmail.com"
+WHERE customer_id = 0;
+
+UPDATE customers
+SET email = "lincoln@us.gov"
+WHERE customer_id = 1;
+
+UPDATE customers
+SET email = "hello@napoleon.me"
+WHERE customer_id = 3;
+
+
+DELETE FROM car WHERE  car_id = 4; 
+select * from car;
